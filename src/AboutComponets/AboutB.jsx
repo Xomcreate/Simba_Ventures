@@ -44,6 +44,7 @@ function AboutB() {
           <img
             src="/images/hello.png"
             alt="Top Car"
+            loading="lazy"
             className="w-full h-full object-cover"
           />
         </motion.div>
@@ -56,6 +57,7 @@ function AboutB() {
           <img
             src="/images/hi.png"
             alt="Bottom Car"
+            loading="lazy"
             className="w-full h-full object-cover"
           />
         </motion.div>

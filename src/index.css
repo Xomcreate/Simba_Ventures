@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+/* Slant bottom-right upward */
+/* Right edge slant */
+/* More slanted right edge */
+.clip-slant-image {
+  clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+}
+
+
