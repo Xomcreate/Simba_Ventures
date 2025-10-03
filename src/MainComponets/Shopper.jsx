@@ -1,11 +1,14 @@
 import React from 'react'
 
-function Shop() {
+function Shopper() {
   return (
+    <>
+    
     <div>
       
     </div>
+    </>
   )
 }
 
-export default Shop
+export default Shopper

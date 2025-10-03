@@ -6,8 +6,9 @@ import Navbar from "./MainComponets/Navbar.jsx";
 import Home from "./MainComponets/Home.jsx";
 import About from "./MainComponets/About.jsx";
 import Contact from "./MainComponets/Contact.jsx";
-import Shop from "./MainComponets/shop.jsx";
+
 import Footer from "./MainComponets/Footer.jsx";
+import Shopper from "./MainComponets/Shopper.jsx";
 
 
 // You can add more page components like Shop, Contact, etc.
@@ -20,7 +21,8 @@ createRoot(document.getElementById("root")).render(
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
          <Route path="/contact" element={<Contact />} />
-          <Route path="/shop" element={<Shop />} />
+           <Route path="/contact" element={<Shopper/>} />
+          
         {/* Add more routes as needed */}
       </Routes>
      
