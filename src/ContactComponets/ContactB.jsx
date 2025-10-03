@@ -24,7 +24,7 @@ function ContactB() {
               Our Office Address
             </h3>
             <p className="text-gray-600 leading-relaxed">
-              835 Middle Country Rd, Selden, NY 11784, United States
+             16/18 Industrial Road Olodi Apapa, Lagos, Nigeria
             </p>
           </div>
 
@@ -43,8 +43,8 @@ function ContactB() {
             <h3 className="text-xl font-bold text-[#02081d] mb-3">
               Call Us Anytime
             </h3>
-            <p className="text-gray-600">help24/7@gmail.com</p>
-            <p className="text-gray-600">(+163)-1202-0088</p>
+            <p className="text-gray-600">kennyojimba@gmail.com</p>
+            <p className="text-gray-600">+234 806 052 3370</p>
           </div>
 
           {/* Card 3 - Work Time */}

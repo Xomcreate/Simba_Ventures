@@ -8,6 +8,7 @@ import {
   FaEnvelope,
   FaMapMarkerAlt,
 } from "react-icons/fa";
+import { Link } from "react-router-dom"; // ✅ Import Link
 import lionhead from "../assets/lionhead.jpeg";
 
 // Fade-up animation
@@ -19,7 +20,11 @@ const fadeUp = {
 // Pop animation for logo
 const popLogo = {
   hidden: { scale: 0, opacity: 0 },
-  visible: { scale: 1, opacity: 1, transition: { type: "spring", stiffness: 150, damping: 12 } },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 150, damping: 12 },
+  },
 };
 
 function Footer() {
@@ -39,19 +44,25 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
         {/* Logo & About */}
         <div className="flex flex-col items-center md:items-start">
-          <motion.div className="flex flex-col items-center mb-3" variants={popLogo}>
+          <motion.div
+            className="flex flex-col items-center mb-3"
+            variants={popLogo}
+          >
             <img
               src={lionhead}
               alt="Simba Ventures Logo"
               className="w-20 h-20 object-cover rounded-full shadow-md"
             />
-            <h2 className="text-2xl font-bold mt-3 text-white">Simba Ventures</h2>
+            <h2 className="text-2xl font-bold mt-3 text-white">
+              Simba Ventures
+            </h2>
             <p className="text-sm text-gray-400 mt-1">Cars & Spare Parts</p>
           </motion.div>
 
           <p className="text-gray-300 leading-relaxed max-w-xs">
             At Simba Ventures, we bring you premium cars and genuine spare parts,
-            combining quality, trust, and exceptional service. Drive your dreams with confidence.
+            combining quality, trust, and exceptional service. Drive your dreams
+            with confidence.
           </p>
         </div>
 
@@ -61,13 +72,26 @@ function Footer() {
             Quick Links
           </h3>
           <ul className="space-y-2 text-gray-300 text-sm">
-            {["Home", "Shop", "About Us", "Contact"].map((item, idx) => (
+            {[
+              { name: "Home", path: "/" },
+              { name: "Shop", path: "/shop" },
+              { name: "About Us", path: "/about" },
+              { name: "Contact", path: "/contact" },
+            ].map((item, idx) => (
               <motion.li
                 key={idx}
                 whileHover={{ x: 5, color: "#F97316" }}
                 className="transition cursor-pointer"
               >
-                {item}
+                <Link
+                  to={item.path}
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: "smooth" }); // ✅ smooth scroll up
+                  }}
+                  className="block w-full"
+                >
+                  {item.name}
+                </Link>
               </motion.li>
             ))}
           </ul>
@@ -81,15 +105,15 @@ function Footer() {
           <ul className="space-y-3 text-gray-300 text-sm mb-6">
             <li className="flex items-center justify-center md:justify-start gap-2.5">
               <FaMapMarkerAlt className="text-[#F97316]" />
-              <span>835 Middle Country Rd, Selden, NY</span>
+              <span>16/18 Industrial Road Olodi Apapa, Lagos, Nigeria</span>
             </li>
             <li className="flex items-center justify-center md:justify-start gap-2.5">
               <FaPhoneAlt className="text-[#F97316]" />
-              <span>(+163)-1202-0088</span>
+              <span>+234 806 052 3370</span>
             </li>
             <li className="flex items-center justify-center md:justify-start gap-2.5">
               <FaEnvelope className="text-[#F97316]" />
-              <span>help24/7@gmail.com</span>
+              <span>kennyojimba@gmail.com</span>
             </li>
           </ul>
 
@@ -98,16 +122,35 @@ function Footer() {
             Follow Us
           </h3>
           <div className="flex gap-3 justify-center md:justify-start">
-            {[FaFacebookF, FaTwitter, FaInstagram].map((Icon, idx) => (
-              <motion.a
-                key={idx}
-                href="#"
-                whileHover={{ scale: 1.2 }}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F97316] text-white border border-[#F97316] transition shadow-md"
-              >
-                <Icon />
-              </motion.a>
-            ))}
+            <motion.a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.2 }}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F97316] text-white border border-[#F97316] transition shadow-md"
+            >
+              <FaFacebookF />
+            </motion.a>
+
+            <motion.a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.2 }}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F97316] text-white border border-[#F97316] transition shadow-md"
+            >
+              <FaTwitter />
+            </motion.a>
+
+            <motion.a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.2 }}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F97316] text-white border border-[#F97316] transition shadow-md"
+            >
+              <FaInstagram />
+            </motion.a>
           </div>
         </div>
       </div>
@@ -115,8 +158,10 @@ function Footer() {
       {/* Bottom Bar */}
       <div className="mt-10 border-t border-gray-700 pt-4 text-center text-gray-400 text-sm">
         © {new Date().getFullYear()}{" "}
-        <span className="text-[#F97316] font-semibold tracking-wide">Simba Ventures</span>.
-        All Rights Reserved.
+        <span className="text-[#F97316] font-semibold tracking-wide">
+          Simba Ventures
+        </span>
+        . All Rights Reserved.
       </div>
     </motion.footer>
   );

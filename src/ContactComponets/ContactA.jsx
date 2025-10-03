@@ -6,7 +6,7 @@ function ContactA() {
       <div className="relative w-full h-[60vh] flex items-center justify-center">
         {/* Hero Background Image */}
         <img
-          src="/images/spur.jpg"
+          src="/compressed/spur.webp"
           alt="Luxury Car"
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover"

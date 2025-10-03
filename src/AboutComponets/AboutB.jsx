@@ -42,7 +42,7 @@ function AboutB() {
           variants={itemVariants}
         >
           <img
-            src="/images/hello.png"
+            src="/compressed/hello.webp"
             alt="Top Car"
             loading="lazy"
             className="w-full h-full object-cover"
@@ -55,7 +55,7 @@ function AboutB() {
           variants={itemVariants}
         >
           <img
-            src="/images/hi.png"
+            src="/compressed/hi.webp"
             alt="Bottom Car"
             loading="lazy"
             className="w-full h-full object-cover"

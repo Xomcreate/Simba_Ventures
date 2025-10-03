@@ -8,6 +8,7 @@ import About from "./MainComponets/About.jsx";
 import Contact from "./MainComponets/Contact.jsx";
 import Shop from "./MainComponets/shop.jsx";
 import Footer from "./MainComponets/Footer.jsx";
+import HomeF from "./HomeComponents/HomeF.jsx";
 
 // You can add more page components like Shop, Contact, etc.
 
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/shop" element={<Shop />} />
         {/* Add more routes as needed */}
       </Routes>
+      <HomeF/>
       <Footer/>
     </Router>
   </StrictMode>

@@ -7,7 +7,7 @@ function ContactC() {
       <div
         className="h-[70vh] w-full bg-cover bg-center flex items-center justify-center relative px-4 sm:px-6 lg:px-8"
         style={{
-          backgroundImage: "url('/images/side.jpg')",
+          backgroundImage: "url('/compressed/side.webp')",
         }}
       >
         {/* Dark Overlay for readability */}

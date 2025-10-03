@@ -7,7 +7,7 @@ function AboutA() {
   useEffect(() => {
     // Lazy load the background image
     const img = new Image();
-    img.src = "/images/taxi.jpg"; // Ensure this image exists
+    img.src = "/compressed/taxi.webp"; // Ensure this image exists
     img.onload = () => setBgLoaded(true);
   }, []);
 
