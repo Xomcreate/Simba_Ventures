@@ -4,18 +4,18 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 function HomeB() {
   // Product Data (no price displayed)
   const allProducts = [
-    { id: 1, img: "/images/hy.jpeg", category: "Cars", name: "Toyota Yaris" },
-    { id: 2, img: "/images/car2.jpeg", category: "Cars", name: "Golf 3 Salon" },
-    { id: 3, img: "/images/car.jpg", category: "Cars", name: "Mercedes Benz C300" },
-    { id: 4, img: "/images/car4.jpg", category: "Cars", name: "Honda Accord 2022" },
-    { id: 5, img: "/images/fur.jpeg", category: "Spare Parts", name: "Brembo Disc Brake" },
-    { id: 6, img: "/images/fir.jpeg", category: "Spare Parts", name: "Automatic Car Engine" },
-    { id: 7, img: "/images/part3.jpg", category: "Spare Parts", name: "Car Battery" },
-    { id: 8, img: "/images/part4.jpg", category: "Spare Parts", name: "Headlight Set" },
-    { id: 9, img: "/images/bb.jpeg", category: "Bicycles", name: "Canyon Mountain Bike" },
-    { id: 10, img: "/images/gi.jpeg", category: "Bicycles", name: "Giant Road Bike" },
-    { id: 11, img: "/images/ee.jpeg", category: "Bicycles", name: "Electric Bicycle" },
-    { id: 12, img: "/images/lol.jpeg", category: "Bicycles", name: "Hybrid Bike" },
+    { id: 1, img: "/compressed/hy.webp", category: "Cars", name: "Toyota Yaris" },
+    { id: 2, img: "/compressed/car2.webp", category: "Cars", name: "Golf 3 Salon" },
+    { id: 3, img: "/compressed/be.webp", category: "Cars", name: "Mercedes Benz C300" },
+    { id: 4, img: "/compressed/hon.webp", category: "Cars", name: "Honda Accord 2022" },
+    { id: 5, img: "/compressed/fur.webp", category: "Spare Parts", name: "Brembo Disc Brake" },
+    { id: 6, img: "/compressed/fir.webp", category: "Spare Parts", name: "Automatic Car Engine" },
+    { id: 7, img: "/compressed/bat.webp", category: "Spare Parts", name: "Car Battery" },
+    { id: 8, img: "/compressed/set.webp", category: "Spare Parts", name: "Headlight Set" },
+    { id: 9, img: "/compressed/bb.webp", category: "Bicycles", name: "Canyon Mountain Bike" },
+    { id: 10, img: "/compressed/gi.webp", category: "Bicycles", name: "Giant Road Bike" },
+    { id: 11, img: "/compressed/ee.webp", category: "Bicycles", name: "Electric Bicycle" },
+    { id: 12, img: "/compressed/lol.webp", category: "Bicycles", name: "Hybrid Bike" },
   ];
 
   const categories = ["ALL", "Cars", "Spare Parts", "Bicycles"];

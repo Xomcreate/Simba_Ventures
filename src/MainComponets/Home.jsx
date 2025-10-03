@@ -33,7 +33,7 @@ function Home() {
 
       </div>
 
-     {/* <HomeF/> */}
+     <HomeF/>
     </div>
   )
 }

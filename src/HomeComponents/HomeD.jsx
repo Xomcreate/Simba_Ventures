@@ -8,21 +8,21 @@ function HomeD() {
       description:
         "High-quality spare parts for all vehicle types — from brake pads to engines. Durable, reliable, and built to keep you moving.",
       icon: <FaTools className="text-3xl" />,
-      image: "/images/fur.jpeg",
+      image: "/compressed/ww.webp",
     },
     {
       title: "Cars",
       description:
         "Browse our wide collection of cars — affordable, luxury, and everything in between. Drive your dream with confidence.",
       icon: <FaCar className="text-3xl" />,
-      image: "/images/car1.jpg",
+      image: "/compressed/gg.webp",
     },
     {
       title: "Bicycles",
       description:
         "From mountain bikes to city rides, our bicycles combine comfort and performance for every kind of rider.",
       icon: <FaBicycle className="text-3xl" />,
-      image: "/images/bic.jpg",
+      image: "/compressed/mm.webp",
     },
   ];
 

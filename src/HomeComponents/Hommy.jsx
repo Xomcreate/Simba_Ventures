@@ -21,7 +21,7 @@ function Hommy() {
           {/* Main Image */}
           <div className="relative">
             <img
-              src="/images/spur.jpg"
+              src="/compressed/hp.webp"
               alt="Car Sales"
               loading="lazy"
               className="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl hover:scale-105 transition-transform duration-700"
@@ -29,7 +29,7 @@ function Hommy() {
 
             {/* Overlapping Image */}
             <motion.img
-              src="/images/spare.jpg"
+              src="/compressed/spare.webp"
               alt="Spare Parts"
               loading="lazy"
               className="w-32 h-36 sm:w-40 sm:h-44 lg:w-44 lg:h-48 object-cover rounded-xl shadow-lg absolute -top-8 -right-6 border-4 border-white"
@@ -43,7 +43,7 @@ function Hommy() {
           {/* Bottom Image */}
           <div className="relative mt-8 lg:-mt-[50px] lg:ml-[140px] w-72 h-44">
             <img
-              src="/images/car1.jpg"
+              src="/compressed/cycle.webp"
               alt="Bicycle Sales"
               loading="lazy"
               className="w-full h-full object-cover rounded-2xl shadow-lg hover:scale-105 transition-transform duration-700"
