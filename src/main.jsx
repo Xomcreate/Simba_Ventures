@@ -9,6 +9,8 @@ import Contact from "./MainComponets/Contact.jsx";
 
 import Footer from "./MainComponets/Footer.jsx";
 import Shopper from "./MainComponets/Shopper.jsx";
+import Admin from "./DashboardComponets/Admin.jsx";
+import User from "./DashboardComponets/User.jsx";
 
 
 // You can add more page components like Shop, Contact, etc.
@@ -22,6 +24,8 @@ createRoot(document.getElementById("root")).render(
         <Route path="/about" element={<About />} />
          <Route path="/contact" element={<Contact />} />
            <Route path="/shop" element={<Shopper/>} />
+            <Route path="/admin" element={<Admin/>} />
+             <Route path="/user" element={<User/>} />
           
         {/* Add more routes as needed */}
       </Routes>
