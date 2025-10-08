@@ -1,5 +1,6 @@
 import React from "react";
 import { FaPhoneAlt } from "react-icons/fa";
+import { Link } from "react-router-dom"; // Import Link for routing
 
 function HomeC() {
   return (
@@ -21,11 +22,12 @@ function HomeC() {
         {/* Buttons with Hover Animation */}
         <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
           {/* Shop Now Button */}
-          <button
+          <Link
+            to="/shop"
             className="relative overflow-hidden bg-gradient-to-r from-[#F97316] to-[#fb923c] 
                        text-white font-semibold px-6 py-3 rounded-sm shadow-md
                        transition-all duration-500 ease-in-out
-                       hover:scale-105 hover:shadow-lg group w-full sm:w-auto"
+                       hover:scale-105 hover:shadow-lg group w-full sm:w-auto inline-block text-center"
           >
             <span className="relative z-10">Shop Now</span>
             {/* Animated Overlay */}
@@ -35,7 +37,7 @@ function HomeC() {
                          rotate-0 group-hover:rotate-180
                          transition-all duration-700 ease-in-out"
             ></span>
-          </button>
+          </Link>
 
           {/* Phone Button */}
           <button

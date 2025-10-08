@@ -1,13 +1,14 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaHeadset } from "react-icons/fa";
+import { Link } from "react-router-dom"; // <-- Added for linking
 
 // Variants for left section (staggered children)
 const leftVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.3, // each child animates 0.3s after previous
+      staggerChildren: 0.3,
     },
   },
 };
@@ -134,12 +135,19 @@ function AboutB() {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 items-center md:items-start">
-            <button className="w-[55%] sm:w-auto px-6 py-3 rounded-full bg-[#F97316] text-white font-semibold shadow-md hover:bg-[#02081d] hover:text-white transition text-base mx-auto md:mx-0">
+            <Link
+              to="/shop" // <-- Shop Cars page
+              className="w-[55%] sm:w-auto px-6 py-3 rounded-full bg-[#F97316] text-white font-semibold shadow-md hover:bg-[#02081d] hover:text-white transition text-base mx-auto md:mx-0 text-center"
+            >
               Shop Cars
-            </button>
-            <button className="w-[55%] sm:w-auto px-6 py-3 rounded-full border border-gray-300 font-medium hover:border-[#F97316] hover:text-[#F97316] transition text-base mx-auto md:mx-0">
+            </Link>
+
+            <Link
+              to="/shop" // <-- Spare Parts page (or same shop page)
+              className="w-[55%] sm:w-auto px-6 py-3 rounded-full border border-gray-300 font-medium hover:border-[#F97316] hover:text-[#F97316] transition text-base mx-auto md:mx-0 text-center"
+            >
               Find Spare Parts
-            </button>
+            </Link>
           </div>
         </div>
       </motion.div>

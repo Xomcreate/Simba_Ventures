@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { FaTools, FaPhoneAlt, FaStore } from "react-icons/fa";
+import { Link } from "react-router-dom"; // <-- make sure you have react-router-dom installed
 
 function HomeA() {
   const heroItems = [
@@ -30,9 +31,9 @@ function HomeA() {
     },
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % heroItems.length);
     }, 5000);
@@ -53,13 +54,6 @@ function HomeA() {
       >
         <div className="absolute inset-0 bg-black/50"></div>
 
-        <img
-          src={heroItems[currentIndex].img}
-          alt={heroItems[currentIndex].title}
-          loading="lazy"
-          className="hidden"
-        />
-
         <div className="relative z-10 max-w-2xl">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 leading-tight drop-shadow-lg tracking-wide uppercase bg-gradient-to-r from-orange-400 to-yellow-300 bg-clip-text text-transparent">
             {heroItems[currentIndex].title}
@@ -67,34 +61,46 @@ function HomeA() {
           <p className="text-sm sm:text-base mb-6 text-gray-200 font-light">
             {heroItems[currentIndex].desc}
           </p>
-          <button className="bg-[#F97316] px-6 sm:px-8 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-lg shadow-md hover:bg-orange-500 transition">
+          <Link
+            to="/shop"
+            className="bg-[#F97316] px-6 sm:px-8 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-lg shadow-md hover:bg-orange-500 transition"
+          >
             Shop Now
-          </button>
+          </Link>
         </div>
       </div>
 
       {/* RIGHT SIDE ACTIONS */}
       <div className="w-full lg:w-[22%] flex flex-col gap-4">
-        {/* Centered Call to Order */}
-        <div className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center justify-center text-center hover:shadow-lg hover:border hover:border-[#F97316] transition">
+        {/* Call to Order */}
+        <Link
+          to="/contact"
+          className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center justify-center text-center hover:shadow-lg hover:border hover:border-[#F97316] transition"
+        >
           <FaPhoneAlt className="text-[#F97316] text-lg mb-2" />
           <span className="font-medium text-[#02081d] text-sm sm:text-base">
             Call to Order
           </span>
-        </div>
+        </Link>
 
-        {/* Centered Request a Quote */}
-        <div className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center justify-center text-center hover:shadow-lg hover:border hover:border-[#F97316] transition">
+        {/* Request a Quote */}
+        <Link
+          to="/contact"
+          className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center justify-center text-center hover:shadow-lg hover:border hover:border-[#F97316] transition"
+        >
           <FaTools className="text-[#F97316] text-lg mb-2" />
           <span className="font-medium text-[#02081d] text-sm sm:text-base">
             Request a Quote
           </span>
-        </div>
+        </Link>
 
-        {/* Shop Now Button */}
-        <div className="bg-[#F97316] text-white text-center p-4 sm:p-5 rounded-lg cursor-pointer font-semibold shadow-md hover:bg-orange-500 transition text-sm sm:text-base">
+        {/* Shop Now */}
+        <Link
+          to="/shop"
+          className="bg-[#F97316] text-white text-center p-4 sm:p-5 rounded-lg cursor-pointer font-semibold shadow-md hover:bg-orange-500 transition text-sm sm:text-base"
+        >
           Shop Now
-        </div>
+        </Link>
 
         {/* Trusted Store Card */}
         <div className="bg-white rounded-lg shadow-md p-6 sm:p-8 flex flex-col items-center text-center mt-4 flex-1 lg:h-[70vh]">

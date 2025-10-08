@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom"; // Import Link for routing
 
 function AboutA() {
   const [bgLoaded, setBgLoaded] = useState(false);
@@ -38,9 +39,14 @@ function AboutA() {
         <p className="text-gray-200 text-base md:text-lg mb-5 drop-shadow-sm max-w-xl">
           From sleek rides to genuine parts, we fuel your journey with quality, trust, and style. Every drive becomes a story worth telling.
         </p>
-        <button className="bg-[#F97316] hover:bg-white hover:text-[#F97316] text-white font-medium px-5 py-2.5 rounded-full transition shadow-md text-sm md:text-base">
+
+        {/* Explore Button linking to /shop */}
+        <Link
+          to="/shop"
+          className="bg-[#F97316] hover:bg-white hover:text-[#F97316] text-white font-medium px-5 py-2.5 rounded-full transition shadow-md text-sm md:text-base inline-block"
+        >
           Explore the Journey
-        </button>
+        </Link>
       </motion.div>
 
       {/* Decorative Circles */}

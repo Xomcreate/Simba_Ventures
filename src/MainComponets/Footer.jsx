@@ -56,13 +56,15 @@ function Footer() {
             <h2 className="text-2xl font-bold mt-3 text-white">
               Simba Ventures
             </h2>
-            <p className="text-sm text-gray-400 mt-1">Cars & Spare Parts</p>
+            <p className="text-sm text-gray-400 mt-1">
+              Cars, Bicycles & Spare Parts
+            </p>
           </motion.div>
 
           <p className="text-gray-300 leading-relaxed max-w-xs">
-            At Simba Ventures, we bring you premium cars and genuine spare parts,
-            combining quality, trust, and exceptional service. Drive your dreams
-            with confidence.
+            At Simba Ventures, we bring you premium cars, bicycles, and genuine
+            spare parts, combining quality, trust, and exceptional service.
+            Drive your dreams with confidence.
           </p>
         </div>
 
