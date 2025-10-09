@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaTachometerAlt, FaShoppingCart, FaEnvelope, FaBars, FaUser } from "react-icons/fa";
-import ShopPage from "../DashboardMenuComponets/ShopPage";
-import ContactPage from "../DashboardMenuComponets/ContactPage";
-import Dash from "../DashboardMenuComponets/Dash";
+import UserDash from "../UserDashComponets/UserDash";
+import Profile from "../UserDashComponets/Profile";
 
 function User() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -10,9 +9,7 @@ function User() {
   const [isMobile, setIsMobile] = useState(false);
 
   const menuItems = [
-    { name: "Dashboard", icon: <FaTachometerAlt />, key: "dashboard" },
-    { name: "Shop", icon: <FaShoppingCart />, key: "shop" },
-    { name: "Contact", icon: <FaEnvelope />, key: "contact" },
+    { name: "Dashboard", icon: <FaTachometerAlt />, key: "userdash" },
     { name: "Profile", icon: <FaUser />, key: "profile" },
   ];
 
@@ -70,15 +67,9 @@ function User() {
 
       {/* Main content */}
       <main className="flex-1 p-6 overflow-y-auto transition-all duration-300">
-        {activeTab === "dashboard" && <Dash />}
-        {activeTab === "shop" && <ShopPage />}
-        {activeTab === "contact" && <ContactPage />}
-        {activeTab === "profile" && (
-          <div className="p-6 bg-white rounded shadow">
-            <h2 className="text-xl font-semibold mb-4 text-[#02081d]">My Profile</h2>
-            <p className="text-gray-700">Welcome, this is your user profile section.</p>
-          </div>
-        )}
+        {activeTab === "userdash" && <UserDash />}
+        {activeTab === "profile" && <Profile/>}
+      
       </main>
     </div>
   );
