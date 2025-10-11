@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FaTachometerAlt, FaShoppingCart, FaEnvelope, FaBars, FaUser } from "react-icons/fa";
+import { FaTachometerAlt, FaUser, FaBars, FaSignOutAlt } from "react-icons/fa";
 import UserDash from "../UserDashComponets/UserDash";
 import Profile from "../UserDashComponets/Profile";
+import { useNavigate } from "react-router-dom";
 
 function User() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("userdash");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
 
   const menuItems = [
     { name: "Dashboard", icon: <FaTachometerAlt />, key: "userdash" },
@@ -16,14 +18,34 @@ function User() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth < 768) setSidebarOpen(false);
-      else setSidebarOpen(true);
+      setSidebarOpen(window.innerWidth >= 768);
     };
-
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // ✅ LOGOUT HANDLER
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:5000/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      // ✅ Clear login info
+      localStorage.removeItem("isLoggedIn");
+
+      // ✅ Notify Navbar instantly
+      window.dispatchEvent(new Event("storage"));
+
+      // ✅ Redirect home
+      navigate("/");
+    } catch (err) {
+      console.error("Logout failed:", err);
+      alert("Error logging out");
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
@@ -47,7 +69,7 @@ function User() {
         </div>
 
         {/* Menu */}
-        <nav className="flex-1 flex flex-col mt-4">
+        <nav className="flex flex-col mt-4">
           {menuItems.map((item) => (
             <button
               key={item.key}
@@ -62,14 +84,24 @@ function User() {
               {sidebarOpen && <span>{item.name}</span>}
             </button>
           ))}
+
+          {/* ✅ Logout Button */}
+          <div className="mt-2 border-t border-gray-700 pt-2">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-4 py-3 bg-[#F97316] font-bold hover:bg-gray-700 text-[#02081d] w-full rounded-r-lg transition-all duration-200"
+            >
+              <FaSignOutAlt />
+              {sidebarOpen && <span>Logout</span>}
+            </button>
+          </div>
         </nav>
       </aside>
 
       {/* Main content */}
       <main className="flex-1 p-6 overflow-y-auto transition-all duration-300">
         {activeTab === "userdash" && <UserDash />}
-        {activeTab === "profile" && <Profile/>}
-      
+        {activeTab === "profile" && <Profile />}
       </main>
     </div>
   );
