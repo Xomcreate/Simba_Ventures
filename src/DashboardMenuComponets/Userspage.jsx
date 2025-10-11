@@ -1,53 +1,45 @@
-import React, { useState } from "react";
-import { FaUserCircle, FaSearch, FaSignInAlt } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaUserCircle, FaSearch, FaTrash } from "react-icons/fa";
+import axios from "axios";
 
 function Userspage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const users = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Admin",
-      joined: "Jan 15, 2025",
-      lastLogin: "Oct 6, 2025",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Mary Smith",
-      email: "mary@example.com",
-      role: "Manager",
-      joined: "Mar 2, 2025",
-      lastLogin: "Oct 5, 2025",
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "Michael Brown",
-      email: "mikebrown@example.com",
-      role: "Cashier",
-      joined: "May 11, 2025",
-      lastLogin: "Sep 28, 2025",
-      status: "Inactive",
-    },
-    {
-      id: 4,
-      name: "Sarah Johnson",
-      email: "sarah@example.com",
-      role: "User",
-      joined: "Jun 23, 2025",
-      lastLogin: "Oct 7, 2025",
-      status: "Active",
-    },
-  ];
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/auth/users");
+      setUsers(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const deleteUser = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
+
+    try {
+      await axios.delete(`http://localhost:5000/api/auth/users/${id}`);
+      setUsers(users.filter((u) => u._id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const filteredUsers = users.filter(
     (u) =>
       u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) return <p className="text-center mt-4">Loading users...</p>;
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
@@ -98,15 +90,15 @@ function Userspage() {
                 <th className="py-3 px-4 font-semibold">Email</th>
                 <th className="py-3 px-4 font-semibold">Role</th>
                 <th className="py-3 px-4 font-semibold">Joined</th>
-                <th className="py-3 px-4 font-semibold">Last Login</th>
                 <th className="py-3 px-4 font-semibold">Status</th>
+                <th className="py-3 px-4 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
                   <tr
-                    key={user.id}
+                    key={user._id}
                     className="border-b hover:bg-gray-50 transition-colors"
                   >
                     <td className="py-3 px-4 flex items-center justify-center sm:justify-start gap-2">
@@ -115,11 +107,7 @@ function Userspage() {
                     </td>
                     <td className="py-3 px-4">{user.email}</td>
                     <td className="py-3 px-4">{user.role}</td>
-                    <td className="py-3 px-4">{user.joined}</td>
-                    <td className="py-3 px-4 flex items-center justify-center sm:justify-start gap-2">
-                      <FaSignInAlt className="text-[#02081d]" />
-                      <span>{user.lastLogin}</span>
-                    </td>
+                    <td className="py-3 px-4">{new Date(user.createdAt).toLocaleDateString()}</td>
                     <td className="py-3 px-4">
                       <span
                         className={`px-3 py-1 text-xs rounded-full font-medium ${
@@ -128,8 +116,16 @@ function Userspage() {
                             : "bg-red-100 text-red-700"
                         }`}
                       >
-                        {user.status}
+                        {user.status || "Active"}
                       </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <button
+                        onClick={() => deleteUser(user._id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -144,11 +140,6 @@ function Userspage() {
           </table>
         </div>
       </div>
-
-      {/* Mobile Hint */}
-      <p className="text-xs text-gray-500 sm:hidden text-center">
-        Swipe horizontally to view full table →
-      </p>
     </div>
   );
 }

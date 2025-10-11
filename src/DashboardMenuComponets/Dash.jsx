@@ -4,25 +4,33 @@ import axios from "axios";
 
 function Dash() {
   const [contacts, setContacts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = "http://localhost:5000/api/contacts";
+  const API_CONTACTS = "http://localhost:5000/api/contacts";
+  const API_USERS = "http://localhost:5000/api/auth/users";
 
   useEffect(() => {
-    const fetchContacts = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get(API_URL);
-        setContacts(res.data.data || []);
+        const [contactsRes, usersRes] = await Promise.all([
+          axios.get(API_CONTACTS),
+          axios.get(API_USERS),
+        ]);
+
+        setContacts(contactsRes.data.data || []);
+        setUsers(usersRes.data || []);
       } catch (err) {
-        console.error("Error fetching contacts:", err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    fetchContacts();
+    fetchData();
   }, []);
 
   const unreadMessages = contacts.filter((msg) => msg.status === "Unread").length;
+  const activeUsers = users.filter((u) => u.status === "Active").length;
 
   const stats = [
     {
@@ -36,7 +44,7 @@ function Dash() {
     {
       id: 2,
       title: "Active Users",
-      value: "45",
+      value: loading ? "..." : activeUsers,
       icon: <FaUsers />,
       color: "bg-[#02081d]",
       text: "text-white",

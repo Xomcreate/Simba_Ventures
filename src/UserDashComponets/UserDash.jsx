@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaUserCircle, FaPhoneAlt } from "react-icons/fa";
 
 function UserDash() {
   const [showContact, setShowContact] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.name) setUserName(user.name);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-5 relative">
-      {/* Welcome Banner */}
       <div className="bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-xl p-6 shadow-md flex flex-col sm:flex-row items-center justify-between mb-8">
         <div>
-          <h2 className="text-xl font-semibold">Welcome, Prisca 👋🏽</h2>
+          <h2 className="text-xl font-semibold">Welcome, {userName || "User"} 👋🏽</h2>
           <p className="text-sm text-orange-100">
             Discover great products and connect directly with sellers.
           </p>
@@ -18,7 +23,6 @@ function UserDash() {
         <FaUserCircle className="text-white text-6xl mt-4 sm:mt-0" />
       </div>
 
-      {/* Call to Action */}
       <motion.div
         className="bg-white p-6 rounded-xl shadow-md text-center"
         initial={{ opacity: 0, y: 15 }}
@@ -41,7 +45,6 @@ function UserDash() {
         </motion.button>
       </motion.div>
 
-      {/* Seller Info Popup */}
       {showContact && (
         <div className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-black/30">
           <motion.div
@@ -50,9 +53,7 @@ function UserDash() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <h3 className="text-xl font-bold text-[#02081d] mb-4">
-              Seller Information
-            </h3>
+            <h3 className="text-xl font-bold text-[#02081d] mb-4">Seller Information</h3>
             <p className="text-gray-700 mb-1">
               📞 Phone: <span className="font-semibold">+234 806 052 3370</span>
             </p>

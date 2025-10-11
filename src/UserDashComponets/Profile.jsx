@@ -1,20 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaUserCircle, FaCamera } from "react-icons/fa";
 
 function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
-    name: "Prisca Ojimba",
-    email: "prisca@example.com",
+    name: "",
+    email: "",
     password: "********",
     avatar: null,
   });
 
+  // Load user info from localStorage on mount
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setProfile((prev) => ({
+        ...prev,
+        name: user.name || "",
+        email: user.email || "",
+        avatar: user.avatar || null,
+      }));
+    }
+  }, []);
+
+  // Handle input changes
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
+  // Handle profile image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -23,8 +38,10 @@ function Profile() {
     }
   };
 
+  // Save changes
   const handleSave = (e) => {
     e.preventDefault();
+    localStorage.setItem("user", JSON.stringify(profile)); // Persist changes
     setIsEditing(false);
   };
 
@@ -49,7 +66,6 @@ function Profile() {
                 <FaCamera size={14} />
               </div>
             </label>
-
             <input
               id="avatar-upload"
               type="file"
@@ -75,45 +91,35 @@ function Profile() {
         <form onSubmit={handleSave} className="space-y-3 text-left">
           {/* Full Name */}
           <div>
-            <label className="block text-xs font-medium text-gray-600">
-              Full Name
-            </label>
+            <label className="block text-xs font-medium text-gray-600">Full Name</label>
             <input
               name="name"
               value={profile.name}
               onChange={handleChange}
               disabled={!isEditing}
               className={`w-full px-3 py-2 border rounded-md text-sm focus:ring-2 ${
-                isEditing
-                  ? "focus:ring-[#F97316]"
-                  : "bg-gray-100 cursor-not-allowed"
+                isEditing ? "focus:ring-[#F97316]" : "bg-gray-100 cursor-not-allowed"
               }`}
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-xs font-medium text-gray-600">
-              Email
-            </label>
+            <label className="block text-xs font-medium text-gray-600">Email</label>
             <input
               name="email"
               value={profile.email}
               onChange={handleChange}
               disabled={!isEditing}
               className={`w-full px-3 py-2 border rounded-md text-sm focus:ring-2 ${
-                isEditing
-                  ? "focus:ring-[#F97316]"
-                  : "bg-gray-100 cursor-not-allowed"
+                isEditing ? "focus:ring-[#F97316]" : "bg-gray-100 cursor-not-allowed"
               }`}
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-xs font-medium text-gray-600">
-              Password
-            </label>
+            <label className="block text-xs font-medium text-gray-600">Password</label>
             <input
               name="password"
               type="password"
@@ -121,9 +127,7 @@ function Profile() {
               onChange={handleChange}
               disabled={!isEditing}
               className={`w-full px-3 py-2 border rounded-md text-sm focus:ring-2 ${
-                isEditing
-                  ? "focus:ring-[#F97316]"
-                  : "bg-gray-100 cursor-not-allowed"
+                isEditing ? "focus:ring-[#F97316]" : "bg-gray-100 cursor-not-allowed"
               }`}
             />
           </div>

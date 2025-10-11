@@ -29,20 +29,14 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Check login and role
+  // Initialize login state from localStorage
   useEffect(() => {
-    setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
-    setUserRole(localStorage.getItem("userRole"));
-
-    const handleStorageChange = () => {
-      setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
-      setUserRole(localStorage.getItem("userRole"));
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const role = localStorage.getItem("userRole");
+    setIsLoggedIn(loggedIn);
+    setUserRole(role);
   }, []);
 
-  // Go to correct dashboard
   const goToDashboard = () => {
     const route = localStorage.getItem("dashboardRoute");
     const role = localStorage.getItem("userRole");
@@ -64,9 +58,10 @@ function Navbar() {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("userRole");
     localStorage.removeItem("dashboardRoute");
+
     setIsLoggedIn(false);
     setUserRole(null);
-    window.dispatchEvent(new Event("storage"));
+
     navigate("/");
   };
 
@@ -138,15 +133,9 @@ function Navbar() {
           <Link to="/shop" onClick={() => setMenuOpen(false)} className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">Shop</Link>
           <Link to="/contact" onClick={() => setMenuOpen(false)} className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">Contact</Link>
 
-          {isLoggedIn ? (
-            <button onClick={() => { goToDashboard(); setMenuOpen(false); }} className="flex items-center justify-center bg-white text-[#02081d] p-2 rounded-full hover:bg-[#F97316] hover:text-white transition duration-300">
-              <FaUser className="text-lg" />
-            </button>
-          ) : (
-            <button onClick={() => { setShowAccount(true); setIsLogin(true); setMenuOpen(false); }} className="flex items-center space-x-2 bg-white text-[#02081d] px-3 py-1 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white transition duration-300">
-              <FaUser className="text-base" /><span>My Account</span>
-            </button>
-          )}
+          <button onClick={() => { handleUserClick(); setMenuOpen(false); }} className="flex items-center space-x-2 bg-white text-[#02081d] px-3 py-1 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white transition duration-300">
+            <FaUser className="text-base" /><span>My Account</span>
+          </button>
         </div>
       </div>
 
@@ -171,16 +160,18 @@ function Navbar() {
                 <motion.div className="flex w-[200%]" animate={{ x: isLogin ? "0%" : "-50%" }} transition={{ duration: 0.5 }}>
                   <div className="w-1/2 px-2">
                     <Login setIsLogin={setIsLogin} onLoginSuccess={(role) => {
-                      setIsLoggedIn(true);
-                      setUserRole(role);
                       localStorage.setItem("isLoggedIn", "true");
                       localStorage.setItem("userRole", role);
                       localStorage.setItem("dashboardRoute", role === "admin" ? "/admin" : "/user");
-                      window.dispatchEvent(new Event("storage"));
+
+                      setIsLoggedIn(true);
+                      setUserRole(role);
                       setShowAccount(false);
                     }} />
                   </div>
-                  <div className="w-1/2 px-2"><Register setIsLogin={setIsLogin} /></div>
+                  <div className="w-1/2 px-2">
+                    <Register setIsLogin={setIsLogin} />
+                  </div>
                 </motion.div>
               </div>
             </motion.div>
