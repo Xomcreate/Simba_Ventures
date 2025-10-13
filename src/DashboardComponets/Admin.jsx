@@ -99,15 +99,7 @@ function Admin() {
           ))}
 
           {/* ✅ Logout Button */}
-          <div className="mt-2 border-t border-gray-700 pt-2">
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-3 px-4 py-3 bg-[#F97316] hover:bg-gray-700 font-bold text-[#02081d] w-full rounded-r-lg transition-all duration-200"
-            >
-              <FaSignOutAlt />
-              {sidebarOpen && <span>Logout</span>}
-            </button>
-          </div>
+         
         </nav>
       </aside>
 

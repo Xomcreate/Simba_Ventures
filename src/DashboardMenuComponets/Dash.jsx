@@ -5,23 +5,27 @@ import axios from "axios";
 function Dash() {
   const [contacts, setContacts] = useState([]);
   const [users, setUsers] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const API_CONTACTS = "http://localhost:5000/api/contacts";
   const API_USERS = "http://localhost:5000/api/auth/users";
+  const API_PRODUCTS = "http://localhost:5000/api/products";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [contactsRes, usersRes] = await Promise.all([
+        const [contactsRes, usersRes, productsRes] = await Promise.all([
           axios.get(API_CONTACTS),
           axios.get(API_USERS),
+          axios.get(API_PRODUCTS),
         ]);
 
         setContacts(contactsRes.data.data || []);
         setUsers(usersRes.data || []);
+        setProducts(productsRes.data || []);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching dashboard data:", err);
       } finally {
         setLoading(false);
       }
@@ -31,12 +35,13 @@ function Dash() {
 
   const unreadMessages = contacts.filter((msg) => msg.status === "Unread").length;
   const activeUsers = users.filter((u) => u.status === "Active").length;
+  const totalProducts = products.length; // ✅ count of all products
 
   const stats = [
     {
       id: 1,
-      title: "Total Stock",
-      value: "128",
+      title: "Total Products",
+      value: loading ? "..." : totalProducts,
       icon: <FaBoxes />,
       color: "bg-[#F97316]",
       text: "text-[#02081d]",

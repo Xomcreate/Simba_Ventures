@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaFacebookF, FaTwitter, FaInstagram, FaSearch, FaUser, FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaSearch,
+  FaUser,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
 import { MdPhone, MdEmail } from "react-icons/md";
 import lionhead from "../assets/lionhead.jpeg";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,6 +22,7 @@ function Navbar() {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
   const navbarRef = useRef(null);
   const navigate = useNavigate();
 
@@ -29,7 +38,7 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Initialize login state from localStorage
+  // Initialize login state
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     const role = localStorage.getItem("userRole");
@@ -37,137 +46,335 @@ function Navbar() {
     setUserRole(role);
   }, []);
 
+  // Go to dashboard based on role
   const goToDashboard = () => {
-    const route = localStorage.getItem("dashboardRoute");
     const role = localStorage.getItem("userRole");
-    if (route) return navigate(route);
     if (role === "admin") return navigate("/admin");
     return navigate("/user");
   };
 
+  // Handle account click
   const handleUserClick = () => {
     if (isLoggedIn) {
-      goToDashboard();
+      setShowDropdown((prev) => !prev);
     } else {
       setShowAccount(true);
       setIsLogin(true);
     }
   };
 
+  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("userRole");
     localStorage.removeItem("dashboardRoute");
-
     setIsLoggedIn(false);
     setUserRole(null);
-
+    setShowDropdown(false);
     navigate("/");
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest(".user-dropdown")) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <>
       {/* Navbar */}
       <div ref={navbarRef} className="bg-white w-full shadow-md">
         <div className="grid grid-cols-4 items-center px-6 py-2">
-          <div className={`flex flex-col items-center justify-center col-span-4 sm:col-span-1 relative 
+          {/* Logo */}
+          <div
+            className={`flex flex-col items-center justify-center col-span-4 sm:col-span-1 relative 
               transition-transform duration-700 ease-out
-              ${animate ? "translate-x-0 opacity-100" : "-translate-x-40 opacity-0"}`}>
-            <img src={lionhead} alt="Logo" className="w-16 h-16 object-cover rounded-full shadow-md" />
-            <span className="text-[#02081d] font-extrabold text-2xl mt-1 font-serif tracking-wide text-center">Simba Ventures</span>
-            <button className="sm:hidden absolute right-0 top-1/2 transform -translate-y-1/2 text-2xl text-[#02081d]" onClick={() => setMenuOpen(!menuOpen)}>
+              ${animate ? "translate-x-0 opacity-100" : "-translate-x-40 opacity-0"}`}
+          >
+            <img
+              src={lionhead}
+              alt="Logo"
+              className="w-16 h-16 object-cover rounded-full shadow-md"
+            />
+            <span className="text-[#02081d] font-extrabold text-2xl mt-1 font-serif tracking-wide text-center">
+              Simba Ventures
+            </span>
+
+            {/* Hamburger (mobile) */}
+            <button
+              className="sm:hidden absolute right-0 top-1/2 transform -translate-y-1/2 text-2xl text-[#02081d]"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
               {menuOpen ? <FaTimes /> : <FaBars />}
             </button>
           </div>
 
-          {/* Desktop */}
-          <div className={`hidden sm:flex col-span-3 flex-col justify-center space-y-2
+          {/* Desktop Section */}
+          <div
+            className={`hidden sm:flex col-span-3 flex-col justify-center space-y-2
               transition-transform duration-700 ease-out
-              ${animate ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"}`}>
+              ${animate ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"}`}
+          >
+            {/* Top Row */}
             <div className="bg-[#02081d] grid grid-cols-7 items-center text-white px-4 py-1 gap-x-4 text-sm">
-              <div className="col-span-1 flex items-center space-x-2"><MdPhone className="text-[#F97316]" size={18} /><span>+234 806 052 3370</span></div>
-              <div className="col-span-1 flex items-center space-x-2"><MdEmail className="text-[#F97316]" size={18} /><span>kennyojimba@gmail.com</span></div>
+              <div className="col-span-1 flex items-center space-x-2">
+                <MdPhone className="text-[#F97316]" size={18} />
+                <span>+234 806 052 3370</span>
+              </div>
+              <div className="col-span-1 flex items-center space-x-2">
+                <MdEmail className="text-[#F97316]" size={18} />
+                <span>kennyojimba@gmail.com</span>
+              </div>
 
+              {/* Search Bar */}
               <div className="col-span-3 flex items-center bg-white rounded-xl shadow-md overflow-hidden h-10">
-                <input type="text" placeholder="Search products..." className="px-3 py-1 text-black outline-none w-full text-sm" />
-                <button className="bg-[#F97316] px-4 py-3"><FaSearch className="text-white text-base" /></button>
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  className="px-3 py-1 text-black outline-none w-full text-sm"
+                />
+                <button className="bg-[#F97316] px-4 py-3">
+                  <FaSearch className="text-white text-base" />
+                </button>
               </div>
 
+              {/* Social Links */}
               <div className="col-span-1 flex items-center justify-center space-x-3 text-lg">
-                <a href="#" className="hover:text-[#F97316]"><FaFacebookF /></a>
-                <a href="#" className="hover:text-[#F97316]"><FaTwitter /></a>
-                <a href="#" className="hover:text-[#F97316]"><FaInstagram /></a>
+                <a href="#" className="hover:text-[#F97316]">
+                  <FaFacebookF />
+                </a>
+                <a href="#" className="hover:text-[#F97316]">
+                  <FaTwitter />
+                </a>
+                <a href="#" className="hover:text-[#F97316]">
+                  <FaInstagram />
+                </a>
               </div>
 
-              {/* Account */}
-              <div className="col-span-1 flex items-center justify-center">
+              {/* Account Section */}
+              <div className="col-span-1 flex items-center justify-center relative user-dropdown">
                 {isLoggedIn ? (
-                  <button onClick={handleUserClick} className="flex items-center justify-center bg-white text-[#02081d] p-2 rounded-full hover:bg-[#F97316] hover:text-white transition duration-300">
-                    <FaUser className="text-lg" />
-                  </button>
+                  <div className="relative">
+                    <button
+                      onClick={handleUserClick}
+                      className="flex items-center justify-center bg-white text-[#02081d] p-2 rounded-full hover:bg-[#F97316] hover:text-white transition duration-300"
+                    >
+                      <FaUser className="text-lg" />
+                    </button>
+
+                    {/* Dropdown for logged in user */}
+                    <AnimatePresence>
+                      {showDropdown && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          className="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden z-50"
+                        >
+                          <button
+                            onClick={goToDashboard}
+                            className="block w-full text-left px-4 py-2 text-sm text-[#02081d] hover:bg-gray-100"
+                          >
+                            Dashboard
+                          </button>
+                          <button
+                            onClick={handleLogout}
+                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                          >
+                            Logout
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 ) : (
-                  <button onClick={handleUserClick} className="flex items-center space-x-2 bg-white text-[#02081d] px-3 py-1 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white transition duration-300 text-sm">
-                    <FaUser className="text-base" /><span>My Account</span>
+                  <button
+                    onClick={handleUserClick}
+                    className="flex items-center space-x-2 bg-white text-[#02081d] px-3 py-1 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white transition duration-300 text-sm"
+                  >
+                    <FaUser className="text-base" />
+                    <span>My Account</span>
                   </button>
                 )}
               </div>
             </div>
 
+            {/* Bottom Navigation */}
             <div className="bg-white flex items-center justify-center h-12">
               <div className="flex flex-1 justify-center md:justify-start items-center space-x-10 md:ml-[280px]">
-                <Link to="/" className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">Home</Link>
-                <Link to="/about" className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">About</Link>
-                <Link to="/shop" className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">Shop</Link>
-                <Link to="/contact" className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">Contact</Link>
+                <Link to="/" className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">
+                  Home
+                </Link>
+                <Link to="/about" className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">
+                  About
+                </Link>
+                <Link to="/shop" className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">
+                  Shop
+                </Link>
+                <Link to="/contact" className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">
+                  Contact
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile */}
-      <div className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${menuOpen ? "translate-x-0" : "-translate-x-full"} sm:hidden`}>
+      {/* ========== MOBILE MENU ========== */}
+      <div
+        className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+          menuOpen ? "translate-x-0" : "-translate-x-full"
+        } sm:hidden`}
+      >
         <div className="flex flex-col items-center justify-center mt-24 px-6 space-y-6">
-          <Link to="/" onClick={() => setMenuOpen(false)} className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">Home</Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)} className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">About</Link>
-          <Link to="/shop" onClick={() => setMenuOpen(false)} className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">Shop</Link>
-          <Link to="/contact" onClick={() => setMenuOpen(false)} className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]">Contact</Link>
+          <Link
+            to="/"
+            onClick={() => setMenuOpen(false)}
+            className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]"
+          >
+            Home
+          </Link>
+          <Link
+            to="/about"
+            onClick={() => setMenuOpen(false)}
+            className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]"
+          >
+            About
+          </Link>
+          <Link
+            to="/shop"
+            onClick={() => setMenuOpen(false)}
+            className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]"
+          >
+            Shop
+          </Link>
+          <Link
+            to="/contact"
+            onClick={() => setMenuOpen(false)}
+            className="text-[#02081d] font-semibold text-lg hover:text-[#F97316]"
+          >
+            Contact
+          </Link>
 
-          <button onClick={() => { handleUserClick(); setMenuOpen(false); }} className="flex items-center space-x-2 bg-white text-[#02081d] px-3 py-1 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white transition duration-300">
-            <FaUser className="text-base" /><span>My Account</span>
-          </button>
+          {/* Account Section on Mobile */}
+          {isLoggedIn ? (
+            <div className="flex flex-col items-center space-y-2">
+              <button
+                onClick={() => {
+                  goToDashboard();
+                  setMenuOpen(false);
+                }}
+                className="flex items-center space-x-2 bg-[#F97316] text-white px-3 py-2 rounded-lg font-semibold transition duration-300"
+              >
+                <FaUser className="text-base" />
+                <span>Dashboard</span>
+              </button>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
+                className="flex items-center space-x-2 bg-red-600 text-white px-3 py-2 rounded-lg font-semibold transition duration-300"
+              >
+                <FaTimes className="text-base" />
+                <span>Logout</span>
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                handleUserClick();
+              }}
+              className="flex items-center space-x-2 bg-white text-[#02081d] px-3 py-2 rounded-lg font-semibold hover:bg-[#F97316] hover:text-white transition duration-300"
+            >
+              <FaUser className="text-base" />
+              <span>My Account</span>
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Account Modal */}
+      {/* ========== ACCOUNT MODAL ========== */}
       <AnimatePresence>
         {showAccount && (
-          <motion.div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <motion.div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 relative overflow-hidden border border-gray-200 pointer-events-auto" initial={{ y: -50 }} animate={{ y: 0 }} exit={{ y: 50 }}>
-              <button onClick={() => setShowAccount(false)} className="absolute top-3 right-3 text-gray-500 hover:text-black"><FaTimes /></button>
+          <motion.div
+            className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 relative overflow-hidden border border-gray-200 pointer-events-auto"
+              initial={{ y: -50 }}
+              animate={{ y: 0 }}
+              exit={{ y: 50 }}
+            >
+              <button
+                onClick={() => setShowAccount(false)}
+                className="absolute top-3 right-3 text-gray-500 hover:text-black"
+              >
+                <FaTimes />
+              </button>
 
               <div className="text-center mb-4">
-                <h2 className="text-2xl font-bold text-[#02081d]">{isLogin ? "Login" : "Register"}</h2>
-                <p className="text-gray-600 text-sm mt-1">Access your account or create one to get started.</p>
+                <h2 className="text-2xl font-bold text-[#02081d]">
+                  {isLogin ? "Login" : "Register"}
+                </h2>
+                <p className="text-gray-600 text-sm mt-1">
+                  Access your account or create one to get started.
+                </p>
               </div>
 
               <div className="flex border-b mb-4">
-                <button onClick={() => setIsLogin(true)} className={`flex-1 py-2 text-center font-medium ${isLogin ? "border-b-2 border-[#F97316] text-[#F97316]" : "text-gray-600 hover:text-[#F97316]"}`}>Login</button>
-                <button onClick={() => setIsLogin(false)} className={`flex-1 py-2 text-center font-medium ${!isLogin ? "border-b-2 border-[#F97316] text-[#F97316]" : "text-gray-600 hover:text-[#F97316]"}`}>Register</button>
+                <button
+                  onClick={() => setIsLogin(true)}
+                  className={`flex-1 py-2 text-center font-medium ${
+                    isLogin
+                      ? "border-b-2 border-[#F97316] text-[#F97316]"
+                      : "text-gray-600 hover:text-[#F97316]"
+                  }`}
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => setIsLogin(false)}
+                  className={`flex-1 py-2 text-center font-medium ${
+                    !isLogin
+                      ? "border-b-2 border-[#F97316] text-[#F97316]"
+                      : "text-gray-600 hover:text-[#F97316]"
+                  }`}
+                >
+                  Register
+                </button>
               </div>
 
               <div className="relative w-full h-full overflow-hidden">
-                <motion.div className="flex w-[200%]" animate={{ x: isLogin ? "0%" : "-50%" }} transition={{ duration: 0.5 }}>
+                <motion.div
+                  className="flex w-[200%]"
+                  animate={{ x: isLogin ? "0%" : "-50%" }}
+                  transition={{ duration: 0.5 }}
+                >
                   <div className="w-1/2 px-2">
-                    <Login setIsLogin={setIsLogin} onLoginSuccess={(role) => {
-                      localStorage.setItem("isLoggedIn", "true");
-                      localStorage.setItem("userRole", role);
-                      localStorage.setItem("dashboardRoute", role === "admin" ? "/admin" : "/user");
-
-                      setIsLoggedIn(true);
-                      setUserRole(role);
-                      setShowAccount(false);
-                    }} />
+                    <Login
+                      setIsLogin={setIsLogin}
+                      onLoginSuccess={(role) => {
+                        localStorage.setItem("isLoggedIn", "true");
+                        localStorage.setItem("userRole", role);
+                        localStorage.setItem(
+                          "dashboardRoute",
+                          role === "admin" ? "/admin" : "/user"
+                        );
+                        setIsLoggedIn(true);
+                        setUserRole(role);
+                        setShowAccount(false);
+                      }}
+                    />
                   </div>
                   <div className="w-1/2 px-2">
                     <Register setIsLogin={setIsLogin} />
