@@ -22,9 +22,13 @@ function ContactC() {
     setStatus("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/contacts", form, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await axios.post(
+        "https://simba-back.onrender.com/api/contacts",
+        form,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       setStatus(res.data.message || "Message sent successfully!");
       setForm({ fullName: "", email: "", message: "" });
