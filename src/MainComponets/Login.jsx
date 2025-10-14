@@ -10,14 +10,16 @@ function Login({ setIsLogin, onLoginSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.email || !form.password)
+
+    if (!form.email || !form.password) {
       return setMessage({ text: "Please fill in all fields", type: "error" });
+    }
 
     setLoading(true);
     setMessage({ text: "", type: "" });
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch("https://simba-back.onrender.com/api/auth/login", {
         method: "POST",
         mode: "cors",
         headers: { "Content-Type": "application/json" },
@@ -49,6 +51,7 @@ function Login({ setIsLogin, onLoginSuccess }) {
         });
       }
     } catch (err) {
+      console.error(err);
       setMessage({
         text: "Something went wrong. Please try again.",
         type: "error",
@@ -88,6 +91,7 @@ function Login({ setIsLogin, onLoginSuccess }) {
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           className="mt-1 block w-full rounded-md border px-3 py-1.5 text-sm focus:ring-[#F97316] focus:border-[#F97316]"
+          placeholder="Enter your email"
         />
       </div>
 
@@ -98,6 +102,7 @@ function Login({ setIsLogin, onLoginSuccess }) {
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           className="mt-1 block w-full rounded-md border px-3 py-1.5 text-sm focus:ring-[#F97316] focus:border-[#F97316]"
+          placeholder="Enter your password"
         />
       </div>
 

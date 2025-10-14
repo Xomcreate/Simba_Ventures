@@ -19,7 +19,7 @@ function Register({ setIsLogin }) {
     setMessage({ text: "", type: "" });
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch("https://simba-back.onrender.com/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -49,7 +49,6 @@ function Register({ setIsLogin }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Title */}
       <h3 className="text-lg font-semibold text-[#02081d]">Create an Account</h3>
       <p className="text-xs text-gray-500 mb-3">
         Join us today — it only takes a minute.
