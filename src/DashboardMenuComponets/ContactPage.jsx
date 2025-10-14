@@ -7,8 +7,8 @@ function ContactPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Backend API URL
-  const API_URL = "http://localhost:5000/api/contacts";
+  // ✅ Updated Backend API URL
+  const API_URL = "https://simba-back.onrender.com/api/contacts";
 
   // ✅ Fetch contacts
   const fetchContacts = async () => {

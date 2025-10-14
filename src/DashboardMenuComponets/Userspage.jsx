@@ -7,9 +7,12 @@ function Userspage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Updated Backend URL
+  const API_URL = "https://simba-back.onrender.com/api/auth/users";
+
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/auth/users");
+      const res = await axios.get(API_URL);
       setUsers(res.data);
     } catch (err) {
       console.error(err);
@@ -26,7 +29,7 @@ function Userspage() {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/auth/users/${id}`);
+      await axios.delete(`${API_URL}/${id}`);
       setUsers(users.filter((u) => u._id !== id));
     } catch (err) {
       console.error(err);

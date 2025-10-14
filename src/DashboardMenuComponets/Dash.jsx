@@ -8,9 +8,10 @@ function Dash() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const API_CONTACTS = "http://localhost:5000/api/contacts";
-  const API_USERS = "http://localhost:5000/api/auth/users";
-  const API_PRODUCTS = "http://localhost:5000/api/products";
+  // ✅ Updated Backend URLs
+  const API_CONTACTS = "https://simba-back.onrender.com/api/contacts";
+  const API_USERS = "https://simba-back.onrender.com/api/auth/users";
+  const API_PRODUCTS = "https://simba-back.onrender.com/api/products";
 
   useEffect(() => {
     const fetchData = async () => {
