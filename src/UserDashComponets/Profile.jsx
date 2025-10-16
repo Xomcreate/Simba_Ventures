@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { FaUserCircle, FaCamera } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 
 function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -10,69 +10,93 @@ function Profile() {
     password: "********",
     avatar: null,
   });
+  const originalRef = useRef(null); // keep original copy for cancel
+  const nameInputRef = useRef(null);
 
   // Load user info from localStorage on mount
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
-      setProfile((prev) => ({
-        ...prev,
+      setProfile({
         name: user.name || "",
         email: user.email || "",
+        password: user.password ? "********" : "********",
         avatar: user.avatar || null,
-      }));
+      });
+      originalRef.current = user;
     }
   }, []);
 
+  // focus the name input when editing starts
+  useEffect(() => {
+    console.log("isEditing changed:", isEditing);
+    if (isEditing) {
+      // small timeout to ensure element exists in DOM
+      setTimeout(() => {
+        nameInputRef.current?.focus();
+      }, 50);
+    }
+  }, [isEditing]);
+
   // Handle input changes
   const handleChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-  };
-
-  // Handle profile image upload
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfile({ ...profile, avatar: imageUrl });
-    }
+    const { name, value } = e.target;
+    setProfile((p) => ({ ...p, [name]: value }));
   };
 
   // Save changes
   const handleSave = (e) => {
     e.preventDefault();
-    localStorage.setItem("user", JSON.stringify(profile)); // Persist changes
+    // Basic validation (example)
+    if (!profile.name.trim() || !profile.email.trim()) {
+      alert("Name and email cannot be empty.");
+      return;
+    }
+
+    // If password is left as "********" assume no change; otherwise save entered.
+    const toSave = {
+      name: profile.name,
+      email: profile.email,
+      avatar: profile.avatar || null,
+      password: profile.password === "********" ? (originalRef.current?.password || "") : profile.password,
+    };
+
+    localStorage.setItem("user", JSON.stringify(toSave));
+    originalRef.current = toSave; // update original
+    setProfile((p) => ({ ...p, password: "********" })); // hide password after save
     setIsEditing(false);
+    console.log("Saved user:", toSave);
+  };
+
+  // Cancel edits and restore original
+  const handleCancel = () => {
+    const orig = originalRef.current || JSON.parse(localStorage.getItem("user")) || {};
+    setProfile({
+      name: orig.name || "",
+      email: orig.email || "",
+      password: "********",
+      avatar: orig.avatar || null,
+    });
+    setIsEditing(false);
+    console.log("Canceled edits, restored:", orig);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center">
       {/* Header Banner */}
       <div className="w-full h-40 bg-gradient-to-r from-orange-500 to-red-600 relative">
-        {/* Profile Avatar */}
-        <div className="absolute left-1/2 -bottom-14 transform -translate-x-1/2 group">
-          <div className="relative w-28 h-28">
-            <label htmlFor="avatar-upload" className="cursor-pointer">
-              {profile.avatar ? (
-                <img
-                  src={profile.avatar}
-                  alt="Profile"
-                  className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md"
-                />
-              ) : (
-                <FaUserCircle className="text-gray-200 text-[110px] border-4 border-white rounded-full bg-white" />
-              )}
-              <div className="absolute bottom-2 right-2 bg-orange-500 text-white p-2 rounded-full shadow-md hover:bg-orange-600 transition">
-                <FaCamera size={14} />
-              </div>
-            </label>
-            <input
-              id="avatar-upload"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageUpload}
-            />
+        {/* Profile Avatar (non-editable) */}
+        <div className="absolute left-1/2 -bottom-14 transform -translate-x-1/2">
+          <div className="w-28 h-28">
+            {profile.avatar ? (
+              <img
+                src={profile.avatar}
+                alt="Profile"
+                className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md"
+              />
+            ) : (
+              <FaUserCircle className="text-gray-200 text-[110px] border-4 border-white rounded-full bg-white" />
+            )}
           </div>
         </div>
       </div>
@@ -84,9 +108,7 @@ function Profile() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h2 className="text-center text-lg font-semibold text-[#02081d] mb-4">
-          My Profile
-        </h2>
+        <h2 className="text-center text-lg font-semibold text-[#02081d] mb-4">My Profile</h2>
 
         <form onSubmit={handleSave} className="space-y-3 text-left">
           {/* Full Name */}
@@ -94,11 +116,12 @@ function Profile() {
             <label className="block text-xs font-medium text-gray-600">Full Name</label>
             <input
               name="name"
+              ref={nameInputRef}
               value={profile.name}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`w-full px-3 py-2 border rounded-md text-sm focus:ring-2 ${
-                isEditing ? "focus:ring-[#F97316]" : "bg-gray-100 cursor-not-allowed"
+              className={`w-full px-3 py-2 border rounded-md text-sm transition-all duration-200 ${
+                isEditing ? "bg-white border-orange-400 focus:ring-2 focus:ring-orange-400" : "bg-gray-100 border-gray-300 cursor-not-allowed"
               }`}
             />
           </div>
@@ -111,8 +134,8 @@ function Profile() {
               value={profile.email}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`w-full px-3 py-2 border rounded-md text-sm focus:ring-2 ${
-                isEditing ? "focus:ring-[#F97316]" : "bg-gray-100 cursor-not-allowed"
+              className={`w-full px-3 py-2 border rounded-md text-sm transition-all duration-200 ${
+                isEditing ? "bg-white border-orange-400 focus:ring-2 focus:ring-orange-400" : "bg-gray-100 border-gray-300 cursor-not-allowed"
               }`}
             />
           </div>
@@ -126,27 +149,30 @@ function Profile() {
               value={profile.password}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`w-full px-3 py-2 border rounded-md text-sm focus:ring-2 ${
-                isEditing ? "focus:ring-[#F97316]" : "bg-gray-100 cursor-not-allowed"
+              className={`w-full px-3 py-2 border rounded-md text-sm transition-all duration-200 ${
+                isEditing ? "bg-white border-orange-400 focus:ring-2 focus:ring-orange-400" : "bg-gray-100 border-gray-300 cursor-not-allowed"
               }`}
             />
+            {isEditing && (
+              <p className="text-xs text-gray-500 mt-1">Enter a new password to change it, or leave as is to keep current.</p>
+            )}
           </div>
 
           {/* Buttons */}
           <div className="flex justify-between items-center pt-2">
             {!isEditing ? (
-              <motion.button
+              // Use regular button for toggle to eliminate interaction edge-cases
+              <button
                 type="button"
-                whileHover={{ scale: 1.05 }}
                 onClick={() => setIsEditing(true)}
                 className="bg-[#F97316] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-orange-500"
               >
                 Edit Profile
-              </motion.button>
+              </button>
             ) : (
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.03 }}
                 className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-500"
               >
                 Save Changes
@@ -154,11 +180,7 @@ function Profile() {
             )}
 
             {isEditing && (
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="text-gray-500 text-sm hover:underline"
-              >
+              <button type="button" onClick={handleCancel} className="text-gray-500 text-sm hover:underline">
                 Cancel
               </button>
             )}

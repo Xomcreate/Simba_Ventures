@@ -8,21 +8,16 @@ function ShopB() {
   const [showContact, setShowContact] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // 👉 Change this if you deploy backend to Render
-  const API_URL = "http://localhost:5000/api/products";
+  // ✅ Use Render backend URL (update this to match yours)
+  const API_BASE = "https://autohub-backend.onrender.com";
+  const API_URL = `${API_BASE}/api/products`;
 
-  // ✅ Fetch products from backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(API_URL);
         setProducts(res.data);
-
-        // Extract categories dynamically
-        const uniqueCategories = [
-          "All",
-          ...new Set(res.data.map((p) => p.category)),
-        ];
+        const uniqueCategories = ["All", ...new Set(res.data.map((p) => p.category))];
         setCategories(uniqueCategories);
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -32,7 +27,6 @@ function ShopB() {
     fetchProducts();
   }, []);
 
-  // ✅ Filter products by selected category
   const filteredProducts =
     selectedCategory === "All"
       ? products
@@ -40,7 +34,7 @@ function ShopB() {
 
   return (
     <div className="w-full bg-gray-50 min-h-screen">
-      {/* ===== Page Title ===== */}
+      {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 py-8 text-center">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#02081d] mb-2">
           Gear Up: Explore Cars, Bikes & Auto Essentials
@@ -50,10 +44,10 @@ function ShopB() {
         </p>
       </div>
 
-      {/* ===== Main Layout ===== */}
+      {/* Main layout */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 flex flex-col md:flex-row gap-6 md:gap-8">
-        {/* ==== Left Sidebar: Categories ==== */}
-        <div className="md:w-1/5 bg-white rounded-2xl shadow-md p-4 sm:p-6 sticky top-20 h-fit md:flex-shrink-0">
+        {/* Categories */}
+        <div className="md:w-1/5 bg-white rounded-2xl shadow-md p-4 sm:p-6 sticky top-20 h-fit">
           <h3 className="text-lg sm:text-xl font-bold text-[#02081d] mb-4">
             Categories
           </h3>
@@ -62,7 +56,7 @@ function ShopB() {
               <li
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`cursor-pointer px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all flex-shrink-0 md:flex-shrink-auto ${
+                className={`cursor-pointer px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all ${
                   selectedCategory === cat
                     ? "bg-[#F97316] text-white shadow-md"
                     : "hover:bg-[#F97316]/20 hover:text-[#F97316]"
@@ -74,33 +68,32 @@ function ShopB() {
           </ul>
         </div>
 
-        {/* ==== Right: Product Cards ==== */}
+        {/* Products */}
         <div className="md:w-4/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredProducts.map((p) => (
             <div
               key={p._id}
-              className="relative bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-1 hover:shadow-2xl"
+              className="relative bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center text-center hover:-translate-y-1 hover:shadow-2xl transition-transform"
             >
-              {/* NEW badge */}
               <span className="absolute top-3 left-3 bg-white text-[#F97316] text-xs font-semibold px-2 py-1 rounded-full border border-[#F97316] shadow-sm">
                 NEW
               </span>
 
-              {/* ✅ FIXED IMAGE DISPLAY */}
               <img
-                src={`http://localhost:5000${p.imgUrl}`}
+                src={
+                  p.imgUrl?.startsWith("http")
+                    ? p.imgUrl
+                    : `${API_BASE}${p.imgUrl}`
+                }
                 alt={p.name}
-                loading="lazy"
-                className="w-32 sm:w-44 md:w-48 h-32 sm:h-44 md:h-48 object-contain mb-3 sm:mb-5"
+                className="w-40 h-40 object-contain mb-4"
                 onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    "https://via.placeholder.com/150?text=No+Image";
+                  e.target.src = "https://via.placeholder.com/150?text=No+Image";
                 }}
               />
 
               <p className="text-sm text-gray-500 mb-1">{p.category}</p>
-              <h4 className="font-bold text-md sm:text-lg text-[#02081d]">
+              <h4 className="font-bold text-md sm:text-lg text-[#02081d] mb-2">
                 {p.name}
               </h4>
 
@@ -109,21 +102,21 @@ function ShopB() {
                   setSelectedProduct(p);
                   setShowContact(true);
                 }}
-                className="mt-3 sm:mt-4 px-4 sm:px-6 py-2 bg-[#F97316] text-white font-bold rounded-full hover:bg-orange-600 transition duration-300 text-sm sm:text-base"
+                className="mt-3 px-4 py-2 bg-[#F97316] text-white font-bold rounded-full hover:bg-orange-600 transition duration-300 text-sm sm:text-base"
               >
-                CALL FOR PRICE
+                CALL FOR DETAILS
               </button>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ==== Seller Info Popup ==== */}
+      {/* Contact modal */}
       {showContact && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-black/40">
-          <div className="bg-white border border-gray-300 rounded-lg p-6 w-full max-w-sm shadow-xl relative">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-sm shadow-xl">
             <h3 className="text-xl font-bold text-[#02081d] mb-4">
-              Seller Information for {selectedProduct?.name}
+              Seller Info – {selectedProduct?.name}
             </h3>
             <p className="text-gray-700 mb-1">
               📞 Phone: <span className="font-semibold">+234 806 052 3370</span>
@@ -131,10 +124,6 @@ function ShopB() {
             <p className="text-gray-700 mb-1">
               📧 Email:{" "}
               <span className="font-semibold">kennyojimba@gmail.com</span>
-            </p>
-            <p className="text-gray-700">
-              💬 WhatsApp:{" "}
-              <span className="font-semibold">+234 806 052 3370</span>
             </p>
             <button
               onClick={() => setShowContact(false)}
