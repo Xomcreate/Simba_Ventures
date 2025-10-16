@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/products"; // backend URL
+// ✅ Updated to live backend URL
+const API_URL = "https://simba-back.onrender.com/api/products";
 
 function ShopPage() {
   const [products, setProducts] = useState([]);

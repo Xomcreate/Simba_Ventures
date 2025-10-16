@@ -8,9 +8,9 @@ function ShopB() {
   const [showContact, setShowContact] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // 👉 Use Render URL when deployed
+  // ✅ Use your Render backend URL
   const API_URL =
-    import.meta.env.VITE_API_URL || "http://localhost:5000/api/products";
+    import.meta.env.VITE_API_URL || "https://simba-back.onrender.com/api/products";
 
   // ✅ Fetch products from backend
   useEffect(() => {
@@ -91,7 +91,7 @@ function ShopB() {
                 src={
                   p.imgUrl?.startsWith("http")
                     ? p.imgUrl
-                    : `http://localhost:5000${p.imgUrl}`
+                    : `https://simba-back.onrender.com${p.imgUrl}`
                 }
                 alt={p.name}
                 className="w-40 h-40 object-contain mb-4"
