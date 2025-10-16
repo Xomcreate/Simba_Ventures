@@ -1,3 +1,4 @@
+// Login.jsx
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -30,17 +31,24 @@ function Login({ setIsLogin, onLoginSuccess }) {
       const data = await res.json();
 
       if (res.ok) {
-        const role = data.user?.role || "user"; // Ensure role exists
+        const role = data.user?.role || "user";
+
+        // SAVE USER TO localStorage so other pages can read it
+        if (data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+          // optionally save role separately
+          localStorage.setItem("role", role);
+        }
 
         setMessage({
           text: `✅ Welcome back, ${data.user?.name || "User"}!`,
           type: "success",
         });
 
-        // ✅ Pass role to Navbar
+        // notify parent (keeps your existing API)
         if (onLoginSuccess) onLoginSuccess(role);
 
-        // Redirect after short delay
+        // redirect
         setTimeout(() => {
           navigate(role === "admin" ? "/admin" : "/user");
         }, 1000);

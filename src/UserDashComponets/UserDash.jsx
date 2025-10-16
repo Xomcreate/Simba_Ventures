@@ -1,3 +1,4 @@
+// UserDash.jsx
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaUserCircle, FaPhoneAlt } from "react-icons/fa";
@@ -7,8 +8,40 @@ function UserDash() {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user?.name) setUserName(user.name);
+    // primary: read from localStorage
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user?.name) {
+          setUserName(user.name);
+          return;
+        }
+      } catch (err) {
+        console.error("Error parsing stored user:", err);
+      }
+    }
+
+    // fallback: request current user from backend (session/cookie)
+    // adjust URL if your API path is different
+    const fetchMe = async () => {
+      try {
+        const res = await fetch("https://simba-back.onrender.com/api/auth/me", {
+          credentials: "include",
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.user?.name) {
+          setUserName(data.user.name);
+          // cache for future pages
+          localStorage.setItem("user", JSON.stringify(data.user));
+        }
+      } catch (err) {
+        console.error("Failed to fetch /me:", err);
+      }
+    };
+
+    fetchMe();
   }, []);
 
   return (
