@@ -8,16 +8,22 @@ function ShopB() {
   const [showContact, setShowContact] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // ✅ Use Render backend URL (update this to match yours)
-  const API_BASE = "https://autohub-backend.onrender.com";
-  const API_URL = `${API_BASE}/api/products`;
+  // 👉 Use Render URL when deployed
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000/api/products";
 
+  // ✅ Fetch products from backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(API_URL);
         setProducts(res.data);
-        const uniqueCategories = ["All", ...new Set(res.data.map((p) => p.category))];
+
+        // Extract unique categories
+        const uniqueCategories = [
+          "All",
+          ...new Set(res.data.map((p) => p.category)),
+        ];
         setCategories(uniqueCategories);
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -27,6 +33,7 @@ function ShopB() {
     fetchProducts();
   }, []);
 
+  // ✅ Filter products by selected category
   const filteredProducts =
     selectedCategory === "All"
       ? products
@@ -34,7 +41,7 @@ function ShopB() {
 
   return (
     <div className="w-full bg-gray-50 min-h-screen">
-      {/* Header */}
+      {/* ===== Page Header ===== */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 py-8 text-center">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#02081d] mb-2">
           Gear Up: Explore Cars, Bikes & Auto Essentials
@@ -44,9 +51,9 @@ function ShopB() {
         </p>
       </div>
 
-      {/* Main layout */}
+      {/* ===== Main Layout ===== */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 flex flex-col md:flex-row gap-6 md:gap-8">
-        {/* Categories */}
+        {/* Sidebar */}
         <div className="md:w-1/5 bg-white rounded-2xl shadow-md p-4 sm:p-6 sticky top-20 h-fit">
           <h3 className="text-lg sm:text-xl font-bold text-[#02081d] mb-4">
             Categories
@@ -68,22 +75,23 @@ function ShopB() {
           </ul>
         </div>
 
-        {/* Products */}
+        {/* Product Grid */}
         <div className="md:w-4/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredProducts.map((p) => (
             <div
               key={p._id}
-              className="relative bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center text-center hover:-translate-y-1 hover:shadow-2xl transition-transform"
+              className="relative bg-white rounded-2xl shadow-lg p-4 sm:p-6 flex flex-col items-center text-center transition-transform transform hover:-translate-y-1 hover:shadow-2xl"
             >
               <span className="absolute top-3 left-3 bg-white text-[#F97316] text-xs font-semibold px-2 py-1 rounded-full border border-[#F97316] shadow-sm">
                 NEW
               </span>
 
+              {/* ✅ Image from backend or Cloudinary */}
               <img
                 src={
                   p.imgUrl?.startsWith("http")
                     ? p.imgUrl
-                    : `${API_BASE}${p.imgUrl}`
+                    : `http://localhost:5000${p.imgUrl}`
                 }
                 alt={p.name}
                 className="w-40 h-40 object-contain mb-4"
@@ -111,10 +119,10 @@ function ShopB() {
         </div>
       </div>
 
-      {/* Contact modal */}
+      {/* Seller Contact Modal */}
       {showContact && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-sm shadow-xl">
+          <div className="bg-white rounded-lg p-6 w-full max-w-sm shadow-xl relative">
             <h3 className="text-xl font-bold text-[#02081d] mb-4">
               Seller Info – {selectedProduct?.name}
             </h3>
